@@ -24,7 +24,7 @@ function userMenu() {
             type: "list",
             name: "action",
             message: "What would you like to do?",
-            choices: ["View all Employees", "View all departments", "View all roles", "View all employees by department", "View all employees by manager", "Add employee", "Update employee role", "Exit"]
+            choices: ["View all Employees", "View all departments", "View all roles", "Add employee", "Update employee role"]
         }
     ]).then(({ action }) => {    // takes answers.action and breaks it into its own variable
         switch (action) {
@@ -37,16 +37,9 @@ function userMenu() {
             case "View all roles":
                 viewRole();
                 break;    
-            case "View all employees by department":
-                employeeDepartment();
-                break;
-            case "View all employees by manager":
-                manager();
-                break;
             case "Add employee":
                 addEmployee();
-                break;
-            
+                break;  
             case "Update employee role":
                 updateEmployee();
                 break;   
@@ -56,7 +49,7 @@ function userMenu() {
 
         }
     });
-}
+};
 
 connection.connect((err) => {
     if (err) throw err;
@@ -71,28 +64,78 @@ connection.connect((err) => {
         connection.query("SELECT * FROM role", (err, result) => {
             if (err) throw err;
             console.table(result);
+
+            userMenu();
         });
     }
     
     const viewEmployees = () => {
+    
         connection.query("SELECT * FROM employees", (err, result) => {
             if (err) throw err;
+            
             console.table(result);
+
+            userMenu();
         });
     }
     const viewDepartment = () => {
         connection.query("SELECT * FROM department", (err, result) => {
             if (err) throw err;
             console.table(result);
+
+            userMenu();
         });
     }
 
 
-// function employeeDepartment() {
+function addEmployee() {
+    inquirer.prompt([
+        {
+            name: "name",
+            message: "What is the employee's first name?",
+        },
+        {
+            name: "lastName",
+            message: "What is the employee's last name?",
+        },
+        {
+            name: "role",
+            type: "list",
+            message: "What is the employees's role?",
+            choices: ["Sales Lead", "Salesperson", "Lead Engineer", "Accountant"]
+
+        },
+        {
+            name: "manager",
+            type: "list",
+            message: "Who is the employees's manager?",
+            choices: ["Jessica Day", "CeCe S", "Nick Miller"]
+
+        }
+    ]).then(({ name, lastName, role, manager }) => {
+        connection.query("INSERT INTO  SET ?",
+            {
+                name: name,
+                lastName: lastName,
+                role: role,
+                manager: manager,
+            },
+            (err, result) => {
+                if (err) throw err;
+                console.log("Successfully added employee!");
+                userMenu();
+            }
+        )
+    })
+};
+
+
+// function updateEmployee() {
 //     inquirer.prompt([
 //         {
 //             name: "name",
-//             message: "What item would you like to sell?",
+//             message: "Wh",
 //         },
 //         {
 //             name: "category",
@@ -119,108 +162,4 @@ connection.connect((err) => {
 //         )
 //     })
 // }
-// function manager() {
-//     inquirer.prompt([
-//         {
-//             name: "name",
-//             message: "What item would you like to sell?",
-//         },
-//         {
-//             name: "category",
-//             message: "What category would you like to list under?"
-//         },
-//         {
-//             name: "starting_bid",
-//             message: "What is your starting bid?"
-
-//         }
-//     ]).then(({ name, category, starting_bid }) => {
-//         connection.query("INSERT INTO auctions SET ?",
-//             {
-//                 name: name,
-//                 category: category,
-//                 starting_bid: starting_bid,
-//                 current_bid: starting_bid
-//             },
-//             (err, result) => {
-//                 if (err) throw err;
-//                 console.log("Successfully added auction item!");
-//                 userMenu();
-//             }
-//         )
-//     })
-// }
-// function addEmployee() {
-//     inquirer.prompt([
-//         {
-//             name: "name",
-//             message: "What is the employee's first name?",
-//         },
-//         {
-//             name: "lastName",
-//             message: "What is the employee's last name?",
-//         },
-//         {
-//             name: "role",
-//             type: "list",
-//             message: "What is the employees's role?"
-//             choices: []
-
-//         },
-//         {
-//             name: "manager",
-//             type: "list",
-//             message: "Who is the employees's manager?"
-//             choices: []
-
-//         }
-//     ]).then(({ name, lastName, role, manager }) => {
-//         connection.query("INSERT INTO employees SET ?",
-//             {
-//                 name: name,
-//                 lastName: lastName,
-//                 role: role,
-//                 manager: manager,
-//             },
-//             (err, result) => {
-//                 if (err) throw err;
-//                 console.log("Successfully added employee!");
-//                 userMenu();
-//             }
-//         )
-//     })
-// };
-
-
-// // function updateEmployee() {
-// //     inquirer.prompt([
-// //         {
-// //             name: "name",
-// //             message: "What item would you like to sell?",
-// //         },
-// //         {
-// //             name: "category",
-// //             message: "What category would you like to list under?"
-// //         },
-// //         {
-// //             name: "starting_bid",
-// //             message: "What is your starting bid?"
-
-// //         }
-// //     ]).then(({ name, category, starting_bid }) => {
-// //         connection.query("INSERT INTO auctions SET ?",
-// //             {
-// //                 name: name,
-// //                 category: category,
-// //                 starting_bid: starting_bid,
-// //                 current_bid: starting_bid
-// //             },
-// //             (err, result) => {
-// //                 if (err) throw err;
-// //                 console.log("Successfully added auction item!");
-// //                 userMenu();
-// //             }
-// //         )
-// //     })
-// // }
 
