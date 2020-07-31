@@ -110,11 +110,11 @@ function addEmployee() {
             name: "manager",
             type: "list",
             message: "Who is the employees's manager?",
-            choices: ["Jessica Day", "CeCe S", "Nick Miller"]
+            choices: ["Jessica Day", "Winston Bishop", "Winston Schmidt", "CeCe S", "Nick Miller"]
 
         }
     ]).then(({ name, lastName, role, manager }) => {
-        connection.query("INSERT INTO  SET ?",
+        connection.query("INSERT INTO employees (name, lastName), department (role), role (manager) VALUES ? ? ?",
             {
                 name: name,
                 lastName: lastName,
